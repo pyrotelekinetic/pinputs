@@ -19,6 +19,13 @@ outputs = { self }: {
       nix.nixPath = let
         mkPin = name: _: "${name}=flake:${name}";
       in mapAttrsToList mkPin config.pins.inputs;
+
+      assertions = [
+        {
+          assertion = all (isType "flake") (attrValues config.pins.inputs);
+          message = "'pins.inputs' needs to be an attribute set of flakes";
+        }
+      ];
     };
   };
 };
