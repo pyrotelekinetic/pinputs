@@ -11,9 +11,15 @@ outputs = { self }: {
       };
     };
 
-    config.nix.registry = let
-      mkPin = name: value: { ${name}.flake = value; };
-    in concatMapAttrs mkPin config.pins.inputs;
+    config = {
+      nix.registry = let
+        mkPin = name: value: { ${name}.flake = value; };
+      in concatMapAttrs mkPin config.pins.inputs;
+
+      nix.nixPath = let
+        mkPin = name: _: "${name}=flake:${name}";
+      in mapAttrsToList mkPin config.pins.inputs;
+    };
   };
 };
 
