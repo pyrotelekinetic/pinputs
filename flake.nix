@@ -2,8 +2,10 @@
 
 description = "Pin your NixOS flake inputs to the system flake registry";
 
-outputs = { self }: {
-  nixosModules.default = { config, lib, ... }: with lib; {
+inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+
+outputs = { self, nixpkgs }: {
+  nixosModules.default = { config, ... }: with nixpkgs.lib; {
     options.pins = {
       inputs = mkOption {
         type = types.attrsOf types.anything;
